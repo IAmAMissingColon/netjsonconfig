@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import os
 import sys
 import traceback
-
-import six
 
 import netjsonconfig
 
@@ -59,7 +59,7 @@ output = parser.add_argument_group('output')
 
 output.add_argument('--backend', '-b',
                     required=True,
-                    choices=netjsonconfig.get_backends().keys(),
+                    choices=list(netjsonconfig.get_backends().keys()),
                     action='store',
                     type=str,
                     help='Configuration backend')
@@ -105,8 +105,8 @@ def _load(config, read=True):
             f = open(config, 'r')
             return f.read() if read else f
         except IOError:
-            print('netjsonconfig: cannot open "{0}": '
-                  'file not found'.format(config))
+            print(('netjsonconfig: cannot open "{0}": '
+                  'file not found'.format(config)))
             sys.exit(1)
     else:
         return config.strip()
@@ -121,7 +121,7 @@ def parse_method_arguments(arguments):
         if method_arg.count('=') != 1:
             message = '--arg option expects arguments in the following format: '\
                       'arg1=val1 arg2=val2'
-            print('netjsonconfig: {0}'.format(message))
+            print(('netjsonconfig: {0}'.format(message)))
             sys.exit(3)
         key, val = method_arg.split('=')
         kwargs[key] = recognize_method_argument(val)
@@ -148,7 +148,7 @@ def print_output(output):
         output = output.getvalue()
     # python2: always print
     # python3: if string, just print
-    if isinstance(output, six.string_types):
+    if isinstance(output):
         print(output)
     # python2: never enters this block
     # python3: writes binary data to standard output
@@ -192,11 +192,11 @@ except netjsonconfig.exceptions.ValidationError as e:
         info = 'For more information repeat the command using --verbose'
     else:
         info = str(e)
-    print(message + info)
+    print((message + info))
     sys.exit(4)
 except TypeError as e:
     if args.verbose:
         traceback.print_exc()
 
-    print('netjsonconfig: {0}'.format(e))
+    print(('netjsonconfig: {0}'.format(e)))
     sys.exit(5)
