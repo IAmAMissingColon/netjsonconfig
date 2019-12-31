@@ -10,6 +10,7 @@ python:
 branches:
   only:
     - master
+    - requirements/jsonschema
 
 before_install:
   - pip install -U pip setuptools wheel
